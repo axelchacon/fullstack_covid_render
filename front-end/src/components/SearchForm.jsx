@@ -9,9 +9,14 @@ export default function SearchForm() {
 	const handleSearch = async (e) => {
 		e.preventDefault();
 		try {
+			// const response = await axios.get(
+			// 	`http://localhost:3002/api/buscar/departamento/${value}?page=1&limit=10`
+			// );
+			const apiBaseUrl = import.meta.env.VITE_BACKEND_URL;
 			const response = await axios.get(
-				`http://localhost:3002/api/buscar/departamento/${value}?page=1&limit=10`
+				`${apiBaseUrl}/api/buscar/departamento/${value}?page=1&limit=10`
 			);
+
 			setResults(response.data);
 		} catch (error) {
 			alert(

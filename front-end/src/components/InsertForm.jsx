@@ -22,7 +22,10 @@ export default function InsertForm() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post("http://localhost:3002/api/nuevo", form);
+			//await axios.post("http://localhost:3002/api/nuevo", form);
+			const apiBaseUrl = import.meta.env.VITE_BACKEND_URL;
+			await axios.post(`${apiBaseUrl}/api/nuevo`, form);
+
 			alert("✅ Información agregada exitosamente");
 			setForm({
 				fecha_corte: "",
