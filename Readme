@@ -1,0 +1,132 @@
+# 📦 README — Deploy Full Stack en Render
+
+Este proyecto contiene:
+
+RENDERFULLSTACKLOCAL/
+├── covid-query-service/ → backend Node.js + PostgreSQL
+└── front-end/ → frontend React + Vite + Tailwind
+
+---
+
+## 🚀 Pasos para deploy completo en Render
+
+
+### 1️⃣ Sube el proyecto a GitHub
+
+```bash
+git init
+git add .
+git commit -m "Proyecto fullstack listo"
+git branch -M main
+git remote add origin <tu-repo-en-github>
+git push -u origin main
+```
+
+---
+
+## 🚀 Pasos para deploy completo en Render
+
+### 1️⃣ Sube el proyecto a GitHub
+
+```bash
+git init
+git add .
+git commit -m "Proyecto fullstack listo"
+git branch -M main
+git remote add origin <tu-repo-en-github>
+git push -u origin main
+
+
+###  Usa el servicio de la nube de PostgresSQL Render ( ve a +New , luego a Postgres):
+
+link: https://dashboard.render.com/new/database
+
+Crea la base de datos PostgresQL , pones un name , la versión gratuita y de ese link cuando creas extraes: Hostname, Port, Database,Username,Password. 
+En Access Control , pones 0.0.0.0/32 , 0.0.0.0/0  con everywhere ; y tu IP_local
+
+
+## Ya Creado tu base de datos Postgresql en Render, accedes al postges de Render en tu local y creas la tabla: 
+
+1. Accedes al postgreSQL desde tu local con PSQL Command  de este mismo link: link: https://dashboard.render.com/new/database 
+
+2. Creas la tabla con  :
+
+
+CREATE TABLE positivos_covid ( 
+    id SERIAL PRIMARY KEY,
+    fecha_corte DATE,
+    departamento VARCHAR(100),
+    provincia VARCHAR(100),
+    distrito VARCHAR(100),
+    metododx VARCHAR(10),
+    edad INTEGER,
+    sexo VARCHAR(20),
+    fecha_resultado DATE,
+    ubigeo VARCHAR(10),
+    id_persona VARCHAR(50)
+); 
+
+3. Insertes un dato de prueba con : 
+
+INSERT INTO positivos_covid (fecha_corte, departamento, provincia, distrito, metododx, edad, sexo, fecha_resultado, ubigeo, id_persona)
+VALUES ('2024-05-01', 'Lima', 'Lima', 'Miraflores', 'PCR', 30, 'Masculino', '2024-05-02', '150101', 'ID001');
+
+
+
+### 2️⃣ Usa el Root "covid-query-service: "Backend → Web Service en Render
+1. Ve a https://dashboard.render.com.
+
+2. Haz clic en New → Web Service.
+
+3. Selecciona tu repo.
+
+4. Configura:
+
+-Name → covid-backend
+
+-Root Directory → covid-query-service
+
+-Build Command → npm install
+
+-Start Command → node index.js
+
+5. Variables de entorno que lo sacas de tu  link: https://dashboard.render.com/new/database:
+
+PGHOST = dpg-xxxxx.oregon-postgres.render.com
+PGUSER = tuuser
+PGPASSWORD = <tu-password>
+PGDATABASE = tudatabse
+PGPORT = 5432
+
+6. Haz clic en Create Web Service.
+Render te dará una URL como: https://covid-backend.onrender.com
+
+
+### 3️⃣ Frontend → Static Site en Render
+En front-end/.env.local pones: VITE_BACKEND_URL=http://localhost:3002
+
+1. Haz clic en New → Static Site.
+
+2. Selecciona tu repo.
+
+3. Configura:
+
+-Name → covid-frontend
+
+-Root Directory → front-end
+
+-Build Command → npm run build
+
+-Publish Directory → dist
+
+-Variables de entorno: 
+
+VITE_BACKEND_URL = https://covid-backend.onrender.com
+
+5. Haz clic en Create Static Site.
+
+### 4️⃣ Prueba en producción
+Accede a:
+https://covid-frontend.onrender.com
+
+### ya puedes probar
