@@ -22,23 +22,20 @@ export default function SearchForm() {
 	};
 
 	return (
-		<div className="bg-white p-6 rounded-xl shadow-md">
-			<h2 className="text-2xl text-secondary font-semibold mb-4">
-				🔍 Buscar Casos
-			</h2>
-			<form onSubmit={handleSearch} className="space-y-4">
-				<select disabled className="w-full p-2 border rounded">
-					<option value="departamento">departamento</option>
-				</select>
+		<div className="bg-gradient-to-r from-indigo-500 to-blue-500 p-6 rounded-xl shadow-lg">
+			<h2 className="text-2xl font-bold text-white mb-4">🔍 Buscar Casos</h2>
+			<form
+				onSubmit={handleSearch}
+				className="flex flex-col md:flex-row md:items-center gap-4">
 				<input
-					className="w-full p-2 border rounded"
-					placeholder="Valor a buscar"
+					className="flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+					placeholder="Departamento"
 					value={value}
 					onChange={(e) => setValue(e.target.value)}
 				/>
 				<button
 					type="submit"
-					className="bg-primary text-white px-4 py-2 rounded hover:bg-teal-600">
+					className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-200">
 					Buscar
 				</button>
 			</form>
@@ -46,7 +43,9 @@ export default function SearchForm() {
 				<ResultTable data={results.data} />
 			) : (
 				results && (
-					<p className="mt-4 text-red-500">No se encontraron resultados.</p>
+					<p className="mt-4 text-yellow-200">
+						⚠ No se encontraron resultados.
+					</p>
 				)
 			)}
 		</div>

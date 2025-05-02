@@ -46,10 +46,8 @@ export default function InsertForm() {
 	};
 
 	return (
-		<div className="bg-white p-6 rounded-xl shadow-md">
-			<h2 className="text-2xl text-secondary font-semibold mb-4">
-				➕ Nuevo Caso
-			</h2>
+		<div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6 rounded-xl shadow-lg mt-8">
+			<h2 className="text-2xl font-bold text-white mb-4">➕ Nuevo Caso</h2>
 			<form
 				onSubmit={handleSubmit}
 				className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -61,12 +59,12 @@ export default function InsertForm() {
 						value={form[key]}
 						onChange={handleChange}
 						placeholder={key}
-						className="p-2 border rounded"
+						className="p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400"
 					/>
 				))}
 				<button
 					type="submit"
-					className="col-span-full bg-secondary text-white px-4 py-2 rounded hover:bg-red-500">
+					className="col-span-full bg-cyan-500 text-white px-4 py-2 rounded-lg hover:bg-cyan-600 transition duration-200">
 					Insertar
 				</button>
 			</form>
