@@ -2,18 +2,7 @@ import pool from "../db.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-const allowedFields = [
-	"fecha_corte",
-	"departamento",
-	"provincia",
-	"distrito",
-	"metododx",
-	"edad",
-	"sexo",
-	"fecha_resultado",
-	"ubigeo",
-	"id_persona",
-];
+const allowedFields = ["departamento"];
 
 export const getByField = async (req, res) => {
 	const { field, value } = req.params;
@@ -28,22 +17,20 @@ export const getByField = async (req, res) => {
 	try {
 		console.log("🟡 Buscando por campo:", field, "valor:", value);
 
-		// Consulta de datos paginada
 		const dataQuery = `
-			SELECT * FROM positivos_covid
-			WHERE ${field} ILIKE $1
-			LIMIT $2 OFFSET $3
-		`;
+            SELECT * FROM positivos_covid
+            WHERE ${field}::text ILIKE $1
+            LIMIT $2 OFFSET $3
+        `;
 
-		// Consulta de cantidad total
 		const countQuery = `
-			SELECT COUNT(*) FROM positivos_covid
-			WHERE ${field} ILIKE $1
-		`;
+            SELECT COUNT(*) FROM positivos_covid
+            WHERE ${field}::text ILIKE $1
+        `;
 
 		const [dataResult, countResult] = await Promise.all([
-			pool.query(dataQuery, [value, limit, offset]),
-			pool.query(countQuery, [value]),
+			pool.query(dataQuery, [`%${value}%`, limit, offset]),
+			pool.query(countQuery, [`%${value}%`]),
 		]);
 
 		const total = parseInt(countResult.rows[0].count, 10);
@@ -75,11 +62,28 @@ export const insertNew = async (req, res) => {
 			id_persona,
 		} = req.body;
 
+		if (
+			!fecha_corte ||
+			!departamento ||
+			!provincia ||
+			!distrito ||
+			!metododx ||
+			!edad ||
+			!sexo ||
+			!fecha_resultado ||
+			!ubigeo ||
+			!id_persona
+		) {
+			return res
+				.status(400)
+				.json({ error: "Todos los campos son obligatorios" });
+		}
+
 		await pool.query(
 			`INSERT INTO positivos_covid (
-        fecha_corte, departamento, provincia, distrito,
-        metododx, edad, sexo, fecha_resultado, ubigeo, id_persona
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+                fecha_corte, departamento, provincia, distrito,
+                metododx, edad, sexo, fecha_resultado, ubigeo, id_persona
+            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
 			[
 				fecha_corte,
 				departamento,

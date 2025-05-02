@@ -3,16 +3,22 @@ import axios from "axios";
 import ResultTable from "./ResultTable";
 
 export default function SearchForm() {
-	const [field, setField] = useState("departamento");
 	const [value, setValue] = useState("");
 	const [results, setResults] = useState(null);
 
 	const handleSearch = async (e) => {
 		e.preventDefault();
-		const response = await axios.get(
-			`http://localhost:3002/api/buscar/${field}/${value}`
-		);
-		setResults(response.data);
+		try {
+			const response = await axios.get(
+				`http://localhost:3002/api/buscar/departamento/${value}?page=1&limit=10`
+			);
+			setResults(response.data);
+		} catch (error) {
+			alert(
+				`❌ Error al buscar: ${error.response?.data?.error || error.message}`
+			);
+			setResults(null);
+		}
 	};
 
 	return (
@@ -21,26 +27,8 @@ export default function SearchForm() {
 				🔍 Buscar Casos
 			</h2>
 			<form onSubmit={handleSearch} className="space-y-4">
-				<select
-					value={field}
-					onChange={(e) => setField(e.target.value)}
-					className="w-full p-2 border rounded">
-					{[
-						"fecha_corte",
-						"departamento",
-						"provincia",
-						"distrito",
-						"metododx",
-						"edad",
-						"sexo",
-						"fecha_resultado",
-						"ubigeo",
-						"id_persona",
-					].map((f) => (
-						<option key={f} value={f}>
-							{f}
-						</option>
-					))}
+				<select disabled className="w-full p-2 border rounded">
+					<option value="departamento">departamento</option>
 				</select>
 				<input
 					className="w-full p-2 border rounded"
@@ -54,7 +42,13 @@ export default function SearchForm() {
 					Buscar
 				</button>
 			</form>
-			{results && <ResultTable data={results.data} />}
+			{results && results.data.length > 0 ? (
+				<ResultTable data={results.data} />
+			) : (
+				results && (
+					<p className="mt-4 text-red-500">No se encontraron resultados.</p>
+				)
+			)}
 		</div>
 	);
 }

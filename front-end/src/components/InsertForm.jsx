@@ -21,9 +21,28 @@ export default function InsertForm() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		await axios.post("http://localhost:3002/api/nuevo", form);
-		alert("✅ Caso insertado correctamente");
-		setForm({});
+		try {
+			await axios.post("http://localhost:3002/api/nuevo", form);
+			alert("✅ Información agregada exitosamente");
+			setForm({
+				fecha_corte: "",
+				departamento: "",
+				provincia: "",
+				distrito: "",
+				metododx: "",
+				edad: "",
+				sexo: "",
+				fecha_resultado: "",
+				ubigeo: "",
+				id_persona: "",
+			});
+		} catch (error) {
+			alert(
+				`❌ Error al agregar información: ${
+					error.response?.data?.error || error.message
+				}`
+			);
+		}
 	};
 
 	return (
@@ -39,7 +58,7 @@ export default function InsertForm() {
 						key={key}
 						name={key}
 						type={key === "edad" ? "number" : "text"}
-						value={form[key] || ""}
+						value={form[key]}
 						onChange={handleChange}
 						placeholder={key}
 						className="p-2 border rounded"
